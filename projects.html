@@ -16,6 +16,19 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="https://wdmvii.com/css/styles.css" rel="stylesheet" />
+
+        <style>
+            .status-bubble {
+                width: 15px; /* Smaller width */
+                height: 15px; /* Smaller height */
+                display: inline-block;
+                margin-right: 5px; /* Space between the bubble and the text */
+            }
+            .status-text {
+                display: inline; /* Ensure label is in line with the bubble */
+                vertical-align: top; /* Align text with the top of the bubble */
+            }
+        </style>
         <!-- Meta Pixel Code -->
         <script>
         !function(f,b,e,v,n,t,s)
@@ -125,7 +138,7 @@
                                             <p>
                                                 I made this in response to the project by <a href="https://qa.alvarcarto.com/phone-background/" target="_blank">Alvar Carto</a> but they always face an issue of their map generation tool being down so I made my own.
                                                 <br>
-                                                <div id="pingMapService" class="rounded-circle" style="width: 20px; height: 20px;"></div>
+                                                <div id="status-bubble1" class="rounded-circle bg-secondary status-bubble"></div><span class="status-text">Site status</span>
                                             </p>
                                     		<a target="_blank" href="https://map.wdmvii.com" class="btn btn-primary"><i class="bi bi-box-arrow-up-right"></i>&nbsp;&nbsp;map.wdmvii.com</a>
                                         </div>
