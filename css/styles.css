@@ -11727,3 +11727,17 @@ html {
     left: -2vw;
   }
 }
+
+/*
+  Custom CSS
+*/
+.status-bubble {
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  margin-right: 5px;
+}
+.status-text {
+  display: inline;
+  vertical-align: top;
+}
