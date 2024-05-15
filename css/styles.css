@@ -11744,3 +11744,34 @@ html {
 .btn-orange {
   background-color: #fd7e14;
 }
+
+.dynamic-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.dynamic-card .card-body {
+  display: flex;
+  flex-direction: column;
+}
+
+.dynamic-card img {
+  width: 100%;
+  height: auto;
+}
+
+@media (min-width: 767px) {
+  .dynamic-card .card-body {
+      flex-direction: row;
+  }
+
+  .dynamic-card img {
+      width: 300px;
+      height: 400px;
+      object-fit: cover;
+  }
+}
+
+.p-5 {
+  padding: 1.5rem !important;
+}
