@@ -11760,7 +11760,7 @@ html {
   height: auto;
 }
 
-@media (min-width: 767px) {
+@media (min-width: 768px) {
   .card .card-body {
       flex-direction: row;
   }
