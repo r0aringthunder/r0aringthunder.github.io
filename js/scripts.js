@@ -21,3 +21,24 @@ function pingSite(domain, interval, elementId) {
 
     checkStatus();
 }
+
+document.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('main-header')) {
+        const items = document.querySelectorAll('.ticker-item');
+        let currentIndex = 0;
+
+        function showNextItem() {
+            items[currentIndex].classList.remove('show');
+            setTimeout(() => {
+                items[currentIndex].classList.add('d-none');
+                currentIndex = (currentIndex + 1) % items.length;
+                items[currentIndex].classList.remove('d-none');
+                setTimeout(() => {
+                    items[currentIndex].classList.add('show');
+                }, 15);
+            }, 500);
+        }
+
+        setInterval(showNextItem, 3200);
+    }
+});

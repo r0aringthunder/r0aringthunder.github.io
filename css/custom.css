@@ -1,0 +1,12 @@
+.ticker-item {
+    opacity: 0;
+    transition: opacity 1s ease-in-out;
+}
+
+.ticker-item.show {
+    opacity: 1;
+}
+
+.d-none {
+    display: none;
+}

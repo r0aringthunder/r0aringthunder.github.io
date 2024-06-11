@@ -11581,14 +11581,14 @@ html {
   margin-top: 5vw;
   max-height: 40rem;
   max-width: 40rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 .profile .profile-img {
-  height: 80vw;
-  max-height: 45rem;
-  position: absolute;
-  bottom: 0;
-  left: 50%;
-  transform: translateX(-50%);
+  height: 61vw;
+  max-height: 22rem;
+  width: 20rem;
 }
 .profile .dots-1 {
   position: absolute;
@@ -11633,7 +11633,7 @@ html {
     width: 60vw;
   }
   .profile .profile-img {
-    height: 65vw;
+    height: 45vw;
   }
   .profile .dots-1 {
     width: 3vw;
@@ -11658,7 +11658,7 @@ html {
     width: 50vw;
   }
   .profile .profile-img {
-    height: 55vw;
+    height: 35vw;
   }
   .profile .dots-1 {
     width: 3vw;
@@ -11683,7 +11683,7 @@ html {
     width: 40vw;
   }
   .profile .profile-img {
-    height: 45vw;
+    height: 25vw;
   }
   .profile .dots-1 {
     width: 1.5vw;
@@ -11708,7 +11708,7 @@ html {
     width: 35vw;
   }
   .profile .profile-img {
-    height: 40vw;
+    height: 20vw;
   }
   .profile .dots-1 {
     width: 1.5vw;
