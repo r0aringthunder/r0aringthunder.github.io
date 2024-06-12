@@ -7475,9 +7475,9 @@ html {
     align-items: center;
 }
 .profile .profile-img {
-    width: 20rem;
-    height: calc(20rem / 1.08);
-    max-height: 22rem;
+    width: 32rem;
+    height: calc(32rem / 1.08);
+    max-height: 29.625rem;
 }
 .profile .dots-1,
 .profile .dots-2,
