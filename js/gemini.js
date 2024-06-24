@@ -47,23 +47,18 @@ document.addEventListener("DOMContentLoaded", async function () {
             userMessage.innerHTML = `<div class="chat-bubble">${prompt}</div><i class="bi bi-person-fill icon"></i>`;
             chatContainer.appendChild(userMessage);
 
-            const stream = session.promptStreaming(prompt);
-            const responseElement = document.createElement('div');
-            responseElement.classList.add('chat-message', 'ai-message');
-            chatContainer.appendChild(responseElement);
-
             try {
                 asking = true;
                 askElement.disabled = true;
                 setError('');
                 questionElement.value = '';
 
-                let aiMessageContent = '';
-                for await (const chunk of stream) {
-                    aiMessageContent += chunk;
-                    responseElement.innerHTML = `<i class="bi bi-robot icon"></i><div class="chat-bubble">${aiMessageContent}</div>`;
-                    chatContainer.scrollTop = chatContainer.scrollHeight;
-                }
+                const response = await session.prompt(prompt);
+                const responseElement = document.createElement('div');
+                responseElement.classList.add('chat-message', 'ai-message');
+                responseElement.innerHTML = `<i class="bi bi-robot icon"></i><div class="chat-bubble">${response}</div>`;
+                chatContainer.appendChild(responseElement);
+                chatContainer.scrollTop = chatContainer.scrollHeight;
             } catch (err) {
                 setError(err.message);
             }
