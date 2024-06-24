@@ -1,15 +1,21 @@
 function setError(error) {
-    document.getElementById("gemini-error").dataset.error = error;
+    const errorElement = document.getElementById("gemini-error");
+    if (errorElement) {
+        errorElement.dataset.error = error;
+    }
 }
 
-window.addEventListener("load", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
     try {
         const hasAI = window.ai != null;
         const hasGemini = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
 
         if (!hasGemini) {
             setError(!hasAI ? "not supported in this browser" : "not ready yet");
-            document.getElementById('how-to').dataset.help = true;
+            const howToElement = document.getElementById('how-to');
+            if (howToElement) {
+                howToElement.dataset.help = true;
+            }
             return;
         }
 
@@ -18,6 +24,11 @@ window.addEventListener("load", async function () {
         const askElement = document.getElementById('ask-button');
         const questionElement = document.getElementById('ask-question');
         const chatContainer = document.getElementById('chat-container');
+
+        if (!askElement || !questionElement || !chatContainer) {
+            setError("Required elements are missing from the page.");
+            return;
+        }
 
         let asking = false;
 
