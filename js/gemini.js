@@ -1,16 +1,16 @@
 
 function setError(error) {
-    document.getElementById("nano-error").dataset.error = error;
+    document.getElementById("gemini-error").dataset.error = error;
 }
 
 window.addEventListener("load", async function () {
     try {
         const hasAI = window.ai != null;
 
-        const hasNano =
+        const hasGemini =
             (hasAI && (await window.ai.canCreateTextSession())) === "readily";
 
-        if (!hasNano) {
+        if (!hasGemini) {
             setError(!hasAI ? "not supported in this browser" : "not ready yet");
             document.getElementById('how-to').dataset.help = true;
             return;
