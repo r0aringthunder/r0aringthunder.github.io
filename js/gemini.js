@@ -1,7 +1,13 @@
-function setError(error) {
+function setError(error, hideGemini = false) {
     const errorElement = document.getElementById("gemini-error");
+    const geminiElements = document.getElementsByClassName("gemini-nano-error-catch");
     if (errorElement) {
         errorElement.dataset.error = error;
+    }
+    if (hideGemini == true) {
+        for (let i = 0; i < geminiElements.length; i++) {
+            geminiElements[i].style.display = "none";
+        }
     }
 }
 
@@ -11,7 +17,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         const hasGemini = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
 
         if (!hasGemini) {
-            setError(!hasAI ? "not supported in this browser" : "not ready yet");
+            setError(!hasAI ? "Gemini Nano is not supported by this browser..." : "Your browser supports Gemini Nano but you still have to turn on a few features. Please see the Projects page for more information.", true);
             const howToElement = document.getElementById('how-to');
             if (howToElement) {
                 howToElement.dataset.help = true;
