@@ -19,6 +19,23 @@ function escapeHtml(html) {
                .replace(/'/g, '&#039;');
 }
 
+function createCodeBlock(code) {
+    const codeBlock = document.createElement('div');
+    codeBlock.classList.add('code-block');
+    codeBlock.innerHTML = `
+        <div class="code-header">
+            <button class="copy-button">Copy code</button>
+        </div>
+        <pre><code>${escapeHtml(code)}</code></pre>
+    `;
+    codeBlock.querySelector('.copy-button').addEventListener('click', () => {
+        navigator.clipboard.writeText(code).then(() => {
+            alert('Code copied to clipboard');
+        });
+    });
+    return codeBlock;
+}
+
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         const hasAI = window.ai != null;
@@ -69,8 +86,20 @@ document.addEventListener("DOMContentLoaded", async function () {
 
                 const response = await session.prompt(prompt);
                 const responseElement = document.createElement('div');
+                const responseContent = document.createElement('div');
+
                 responseElement.classList.add('chat-message', 'ai-message');
-                responseElement.innerHTML = `<i class="bi bi-robot icon"></i><div class="chat-bubble">${escapeHtml(response)}</div>`;
+                responseContent.classList.add('chat-bubble');
+                responseContent.innerHTML = escapeHtml(response);
+                responseElement.appendChild(responseContent);
+
+                if (/<[a-z][\s\S]*>/i.test(response)) {
+                    const codeBlock = createCodeBlock(response);
+                    responseElement.appendChild(codeBlock);
+                } else {
+                    responseElement.innerHTML = `<i class="bi bi-robot icon"></i><div class="chat-bubble">${escapeHtml(response)}</div>`;
+                }
+
                 chatContainer.appendChild(responseElement);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
             } catch (err) {
