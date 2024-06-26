@@ -27,8 +27,8 @@
 }
 
 .user-message .chat-bubble {
-    background-color: #d1e7dd;
-    border: 1px solid #badbcc;
+    background-color: #e7f3ff;
+    border: 1px solid #e7f3ff;
     border-radius: 10px;
     padding: 10px;
     max-width: 80%;
@@ -36,11 +36,11 @@
 }
 
 .ai-message .chat-bubble {
-    background-color: #f8d7da;
-    border: 1px solid #f5c2c7;
+    background-color: #f8f9fa;
+    border: 1px solid #f8f9fa;
     border-radius: 10px;
     padding: 10px;
-    max-width: 80%;
+    max-width: 90%;
     word-wrap: break-word;
 }
 
@@ -52,8 +52,4 @@
 .bi-robot.icon {
     font-size: 24px;
     margin-right: 10px;
-}
-
-.toast-container {
-    z-index: 1055;
 }

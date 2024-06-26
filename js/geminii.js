@@ -77,31 +77,6 @@ function renderResponse(response, container) {
     container.appendChild(chatBubble);
 }
 
-function showToast(message) {
-    const toastContainer = document.getElementById('toast-container');
-    const toast = document.createElement('div');
-    toast.classList.add('toast', 'show');
-    toast.role = 'alert';
-    toast.ariaLive = 'assertive';
-    toast.ariaAtomic = 'true';
-    toast.innerHTML = `
-        <div class="toast-header">
-            <strong class="me-auto">Notification</strong>
-            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
-        </div>
-        <div class="toast-body">
-            ${message}
-        </div>
-    `;
-    toastContainer.appendChild(toast);
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-        toast.classList.add('hide');
-        toast.addEventListener('transitionend', () => toast.remove());
-    }, 3000);
-}
-
 document.addEventListener("DOMContentLoaded", async function () {
     try {
         const hasAI = window.ai != null;
