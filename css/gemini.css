@@ -20,20 +20,6 @@
     font-size: 14px;
 }
 
-.copy-button {
-    background-color: #007bff;
-    border: none;
-    color: white;
-    padding: 5px 10px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 14px;
-    margin: 2px 1px;
-    cursor: pointer;
-    border-radius: 4px;
-}
-
 .chat-message {
     display: flex;
     align-items: flex-start;

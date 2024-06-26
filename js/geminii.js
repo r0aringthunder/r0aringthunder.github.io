@@ -15,7 +15,7 @@ function escapeHtml(html) {
     return html.replace(/&/g, '&amp;')
                .replace(/</g, '&lt;')
                .replace(/>/g, '&gt;')
-               .replace(/"//g, '&quot;')
+               .replace(/"/g, '&quot;')
                .replace(/'/g, '&#039;');
 }
 
@@ -25,18 +25,9 @@ function createCodeBlock(code, language) {
     codeBlock.innerHTML = `
         <div class="code-header">
             <span class="code-language">${language}</span>
-            <button class="copy-button">Copy code</button>
         </div>
         <pre><code>${escapeHtml(code)}</code></pre>
     `;
-    const copyButton = codeBlock.querySelector('.copy-button');
-    copyButton.addEventListener('click', () => {
-        navigator.clipboard.writeText(code).then(() => {
-            showToast('Code copied to clipboard');
-        }).catch(err => {
-            console.error('Failed to copy: ', err);
-        });
-    });
     return codeBlock;
 }
 
@@ -86,7 +77,7 @@ function renderResponse(response, container) {
 function showToast(message) {
     const toastContainer = document.getElementById('toast-container');
     const toast = document.createElement('div');
-    toast.classList.add('toast');
+    toast.classList.add('toast', 'show');
     toast.role = 'alert';
     toast.ariaLive = 'assertive';
     toast.ariaAtomic = 'true';
@@ -101,12 +92,11 @@ function showToast(message) {
     `;
     toastContainer.appendChild(toast);
 
-    const bsToast = new bootstrap.Toast(toast);
-    bsToast.show();
-
-    toast.addEventListener('hidden.bs.toast', () => {
-        toast.remove();
-    });
+    setTimeout(() => {
+        toast.classList.remove('show');
+        toast.classList.add('hide');
+        toast.addEventListener('transitionend', () => toast.remove());
+    }, 3000);
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
