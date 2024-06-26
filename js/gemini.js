@@ -34,20 +34,23 @@ function renderResponse(e, t) {
     const n = extractCodeBlocks(e);
     const fragment = document.createDocumentFragment();
     n.forEach((e, index) => {
+        const wrapper = document.createElement("div");
         if (e.type === "text") {
             const span = document.createElement("span");
             span.innerHTML = escapeHtml(e.content);
-            fragment.appendChild(span);
+            wrapper.appendChild(span);
         } else if (e.type === "code") {
             const codeBlock = createCodeBlock(e.content, e.language);
-            fragment.appendChild(codeBlock);
+            wrapper.appendChild(codeBlock);
         }
+        fragment.appendChild(wrapper);
         if (index < n.length - 1) {
             fragment.appendChild(document.createElement("br"));
         }
     });
     t.appendChild(fragment);
 }
+
 
 document.addEventListener("DOMContentLoaded", async function () {
     try {
