@@ -1,13 +1,7 @@
-function setError(error, hideGemini = false) {
-    const errorElement = document.getElementById("gemini-error");
-    const geminiElements = document.getElementsByClassName("gemini-nano-error-catch");
+function setError(error) {
+    const errorElement = document.getElementById("nano-error");
     if (errorElement) {
         errorElement.dataset.error = error;
-    }
-    if (hideGemini == true) {
-        for (let i = 0; i < geminiElements.length; i++) {
-            geminiElements[i].style.display = "none";
-        }
     }
 }
 
@@ -19,11 +13,12 @@ function escapeHtml(html) {
                .replace(/'/g, '&#039;');
 }
 
-function createCodeBlock(code) {
+function createCodeBlock(code, language) {
     const codeBlock = document.createElement('div');
     codeBlock.classList.add('code-block');
     codeBlock.innerHTML = `
         <div class="code-header">
+            <span class="code-language">${language}</span>
             <button class="copy-button">Copy code</button>
         </div>
         <pre><code>${escapeHtml(code)}</code></pre>
@@ -36,30 +31,64 @@ function createCodeBlock(code) {
     return codeBlock;
 }
 
-document.addEventListener("DOMContentLoaded", async function () {
+function extractCodeBlocks(response) {
+    const codeBlockPattern = /```(\w+)?\n([\s\S]*?)```/g;
+    let match;
+    const parts = [];
+    let lastIndex = 0;
+
+    while ((match = codeBlockPattern.exec(response)) !== null) {
+        const language = match[1] || 'text';
+        const code = match[2];
+
+        if (match.index > lastIndex) {
+            parts.push({ type: 'text', content: response.slice(lastIndex, match.index) });
+        }
+
+        parts.push({ type: 'code', content: code, language });
+
+        lastIndex = codeBlockPattern.lastIndex;
+    }
+
+    if (lastIndex < response.length) {
+        parts.push({ type: 'text', content: response.slice(lastIndex) });
+    }
+
+    return parts;
+}
+
+function renderResponse(response, container) {
+    const parts = extractCodeBlocks(response);
+
+    parts.forEach(part => {
+        if (part.type === 'text') {
+            const textElement = document.createElement('div');
+            textElement.classList.add('chat-bubble');
+            textElement.innerHTML = escapeHtml(part.content);
+            container.appendChild(textElement);
+        } else if (part.type === 'code') {
+            const codeBlock = createCodeBlock(part.content, part.language);
+            container.appendChild(codeBlock);
+        }
+    });
+}
+
+window.addEventListener("load", async function () {
     try {
         const hasAI = window.ai != null;
-        const hasGemini = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
 
-        if (!hasGemini) {
-            setError(!hasAI ? "Gemini Nano is not supported by this browser..." : "Your browser supports Gemini Nano but you still have to turn on a few features. Please see the Projects page for more information.", true);
-            const howToElement = document.getElementById('how-to');
-            if (howToElement) {
-                howToElement.dataset.help = true;
-            }
+        const hasNano = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
+
+        if (!hasNano) {
+            setError(!hasAI ? "not supported in this browser" : "not ready yet");
+            document.getElementById('how-to').dataset.help = true;
             return;
         }
 
         const session = await window.ai.createTextSession();
 
-        const askElement = document.getElementById('ask-button');
-        const questionElement = document.getElementById('ask-question');
+        const questionElement = document.getElementById('promptTextArea');
         const chatContainer = document.getElementById('chat-container');
-
-        if (!askElement || !questionElement || !chatContainer) {
-            setError("Required elements are missing from the page.");
-            return;
-        }
 
         let asking = false;
 
@@ -68,11 +97,7 @@ document.addEventListener("DOMContentLoaded", async function () {
                 return;
             }
 
-            const prompt = questionElement.value;
-            if (!prompt.trim()) {
-                return;
-            }
-
+            const prompt = questionElement.value.trim() === "" ? "Hi there" : questionElement.value.trim();
             const userMessage = document.createElement('div');
             userMessage.classList.add('chat-message', 'user-message');
             userMessage.innerHTML = `<div class="chat-bubble">${escapeHtml(prompt)}</div><i class="bi bi-person-fill icon"></i>`;
@@ -80,25 +105,15 @@ document.addEventListener("DOMContentLoaded", async function () {
 
             try {
                 asking = true;
-                askElement.disabled = true;
                 setError('');
                 questionElement.value = '';
 
                 const response = await session.prompt(prompt);
                 const responseElement = document.createElement('div');
-                const responseContent = document.createElement('div');
-
                 responseElement.classList.add('chat-message', 'ai-message');
-                responseContent.classList.add('chat-bubble');
-                responseContent.innerHTML = escapeHtml(response);
-                responseElement.appendChild(responseContent);
-
-                if (/<[a-z][\s\S]*>/i.test(response)) {
-                    const codeBlock = createCodeBlock(response);
-                    responseElement.appendChild(codeBlock);
-                } else {
-                    responseElement.innerHTML = `<i class="bi bi-robot icon"></i><div class="chat-bubble">${escapeHtml(response)}</div>`;
-                }
+                responseElement.innerHTML = `<i class="bi bi-robot icon"></i>`;
+                
+                renderResponse(response, responseElement);
 
                 chatContainer.appendChild(responseElement);
                 chatContainer.scrollTop = chatContainer.scrollHeight;
@@ -107,16 +122,10 @@ document.addEventListener("DOMContentLoaded", async function () {
             }
 
             asking = false;
-            askElement.disabled = false;
         }
 
-        askElement.addEventListener('click', () => {
-            ask();
-        });
-
-        document.addEventListener('keydown', (event) => {
-            if (!asking && event.shiftKey && event.key === "Enter") {
-                askElement.focus();
+        questionElement.addEventListener('keydown', (event) => {
+            if (!asking && event.key === "Enter" && !event.shiftKey) {
                 event.preventDefault();
                 ask();
             }
