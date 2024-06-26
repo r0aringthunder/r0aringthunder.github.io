@@ -31,7 +31,9 @@ function createCodeBlock(code, language) {
     `;
     codeBlock.querySelector('.copy-button').addEventListener('click', () => {
         navigator.clipboard.writeText(code).then(() => {
-            alert('Code copied to clipboard');
+            showToast('Code copied to clipboard');
+        }).catch(err => {
+            console.error('Failed to copy: ', err);
         });
     });
     return codeBlock;
@@ -78,6 +80,32 @@ function renderResponse(response, container) {
     });
 
     container.appendChild(chatBubble);
+}
+
+function showToast(message) {
+    const toastContainer = document.getElementById('toast-container');
+    const toast = document.createElement('div');
+    toast.classList.add('toast');
+    toast.role = 'alert';
+    toast.ariaLive = 'assertive';
+    toast.ariaAtomic = 'true';
+    toast.innerHTML = `
+        <div class="toast-header">
+            <strong class="me-auto">Notification</strong>
+            <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+        <div class="toast-body">
+            ${message}
+        </div>
+    `;
+    toastContainer.appendChild(toast);
+
+    const bsToast = new bootstrap.Toast(toast);
+    bsToast.show();
+
+    toast.addEventListener('hidden.bs.toast', () => {
+        toast.remove();
+    });
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
