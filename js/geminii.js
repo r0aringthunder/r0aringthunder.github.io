@@ -1,7 +1,13 @@
-function setError(error) {
-    const errorElement = document.getElementById("nano-error");
+function setError(error, hideGemini = false) {
+    const errorElement = document.getElementById("gemini-error");
+    const geminiElements = document.getElementsByClassName("gemini-nano-error-catch");
     if (errorElement) {
         errorElement.dataset.error = error;
+    }
+    if (hideGemini == true) {
+        for (let i = 0; i < geminiElements.length; i++) {
+            geminiElements[i].style.display = "none";
+        }
     }
 }
 
@@ -13,22 +19,30 @@ function escapeHtml(html) {
                .replace(/'/g, '&#039;');
 }
 
-window.addEventListener("load", async function () {
+document.addEventListener("DOMContentLoaded", async function () {
     try {
         const hasAI = window.ai != null;
+        const hasGemini = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
 
-        const hasNano = (hasAI && (await window.ai.canCreateTextSession())) === "readily";
-
-        if (!hasNano) {
-            setError(!hasAI ? "not supported in this browser" : "not ready yet");
-            document.getElementById('how-to').dataset.help = true;
+        if (!hasGemini) {
+            setError(!hasAI ? "Gemini Nano is not supported by this browser..." : "Your browser supports Gemini Nano but you still have to turn on a few features. Please see the Projects page for more information.", true);
+            const howToElement = document.getElementById('how-to');
+            if (howToElement) {
+                howToElement.dataset.help = true;
+            }
             return;
         }
 
         const session = await window.ai.createTextSession();
 
-        const questionElement = document.getElementById('promptTextArea');
+        const askElement = document.getElementById('ask-button');
+        const questionElement = document.getElementById('ask-question');
         const chatContainer = document.getElementById('chat-container');
+
+        if (!askElement || !questionElement || !chatContainer) {
+            setError("Required elements are missing from the page.");
+            return;
+        }
 
         let asking = false;
 
@@ -37,7 +51,11 @@ window.addEventListener("load", async function () {
                 return;
             }
 
-            const prompt = questionElement.value.trim() === "" ? "Hi there" : questionElement.value.trim();
+            const prompt = questionElement.value;
+            if (!prompt.trim()) {
+                return;
+            }
+
             const userMessage = document.createElement('div');
             userMessage.classList.add('chat-message', 'user-message');
             userMessage.innerHTML = `<div class="chat-bubble">${escapeHtml(prompt)}</div><i class="bi bi-person-fill icon"></i>`;
@@ -45,6 +63,7 @@ window.addEventListener("load", async function () {
 
             try {
                 asking = true;
+                askElement.disabled = true;
                 setError('');
                 questionElement.value = '';
 
@@ -59,10 +78,16 @@ window.addEventListener("load", async function () {
             }
 
             asking = false;
+            askElement.disabled = false;
         }
 
-        questionElement.addEventListener('keydown', (event) => {
-            if (!asking && event.key === "Enter" && !event.shiftKey) {
+        askElement.addEventListener('click', () => {
+            ask();
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (!asking && event.shiftKey && event.key === "Enter") {
+                askElement.focus();
                 event.preventDefault();
                 ask();
             }
