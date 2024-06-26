@@ -65,18 +65,19 @@ function extractCodeBlocks(response) {
 
 function renderResponse(response, container) {
     const parts = extractCodeBlocks(response);
+    const chatBubble = document.createElement('div');
+    chatBubble.classList.add('chat-bubble');
 
     parts.forEach(part => {
         if (part.type === 'text') {
-            const textElement = document.createElement('div');
-            textElement.classList.add('chat-bubble');
-            textElement.innerHTML = escapeHtml(part.content);
-            container.appendChild(textElement);
+            chatBubble.innerHTML += escapeHtml(part.content);
         } else if (part.type === 'code') {
             const codeBlock = createCodeBlock(part.content, part.language);
-            container.appendChild(codeBlock);
+            chatBubble.appendChild(codeBlock);
         }
     });
+
+    container.appendChild(chatBubble);
 }
 
 document.addEventListener("DOMContentLoaded", async function () {

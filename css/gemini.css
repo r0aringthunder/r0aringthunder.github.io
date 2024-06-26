@@ -33,3 +33,43 @@
     cursor: pointer;
     border-radius: 4px;
 }
+
+.chat-message {
+    display: flex;
+    align-items: flex-start;
+    margin-bottom: 10px;
+}
+
+.user-message .chat-bubble {
+    background-color: #d1e7dd;
+    border: 1px solid #badbcc;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+}
+
+.ai-message .chat-bubble {
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+    border-radius: 10px;
+    padding: 10px;
+    max-width: 60%;
+    word-wrap: break-word;
+}
+
+.chat-bubble {
+    margin-left: 10px;
+}
+
+.bi-person-fill.icon,
+.bi-robot.icon {
+    font-size: 24px;
+    margin-right: 10px;
+}
+
+.chat-container {
+    overflow-y: auto;
+    max-height: 500px;
+    margin-top: 20px;
+}
