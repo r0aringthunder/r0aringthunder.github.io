@@ -26,8 +26,11 @@ function createCodeBlock(code, language) {
         <div class="code-header">
             <span class="code-language">${language}</span>
         </div>
-        <pre><code>${escapeHtml(code)}</code></pre>
+        <pre><code class="language-${language}">${escapeHtml(code)}</code></pre>
     `;
+
+    Prism.highlightElement(codeBlock.querySelector('code'));
+
     return codeBlock;
 }
 
