@@ -33,7 +33,7 @@ function extractCodeBlocks(e) {
 function renderResponse(e, t) {
     const n = extractCodeBlocks(e);
     const fragment = document.createDocumentFragment();
-    n.forEach((e) => {
+    n.forEach((e, index) => {
         if (e.type === "text") {
             const span = document.createElement("span");
             span.innerHTML = escapeHtml(e.content);
