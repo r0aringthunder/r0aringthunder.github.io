@@ -42,6 +42,9 @@ function renderResponse(e, t) {
             const codeBlock = createCodeBlock(e.content, e.language);
             fragment.appendChild(codeBlock);
         }
+        if (index < n.length - 1) {
+            fragment.appendChild(document.createElement("br"));
+        }
     });
     t.appendChild(fragment);
 }
