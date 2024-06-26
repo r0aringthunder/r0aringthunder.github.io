@@ -68,8 +68,6 @@
     margin-right: 10px;
 }
 
-.chat-container {
-    overflow-y: auto;
-    max-height: 500px;
-    margin-top: 20px;
+.toast-container {
+    z-index: 1055;
 }

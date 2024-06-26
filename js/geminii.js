@@ -15,7 +15,7 @@ function escapeHtml(html) {
     return html.replace(/&/g, '&amp;')
                .replace(/</g, '&lt;')
                .replace(/>/g, '&gt;')
-               .replace(/"/g, '&quot;')
+               .replace(/"//g, '&quot;')
                .replace(/'/g, '&#039;');
 }
 
@@ -29,7 +29,8 @@ function createCodeBlock(code, language) {
         </div>
         <pre><code>${escapeHtml(code)}</code></pre>
     `;
-    codeBlock.querySelector('.copy-button').addEventListener('click', () => {
+    const copyButton = codeBlock.querySelector('.copy-button');
+    copyButton.addEventListener('click', () => {
         navigator.clipboard.writeText(code).then(() => {
             showToast('Code copied to clipboard');
         }).catch(err => {
